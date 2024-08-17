@@ -8,10 +8,6 @@ import 'package:flutter_chinese_keyboard/sogo/sougou_pinyin_scel.dart';
 import 'package:flutter_chinese_keyboard/sogo/sougou_pinyin_txt.dart';
 
 void main() async {
-  final file =
-      File("D:\\Code\\Vrzwk\\flutter_chinese_keyboard\\lib\\assets\\words");
-  var wordsText = await file.readAsString();
-  List<String> lines = wordsText.split('\n');
   // final file = File("D:\\Code\\Vrzwk\\flutter_chinese_keyboard\\test\\GBK.txt");
   // var lines = await file.readAsLines();
   // String code = "[";
@@ -28,7 +24,7 @@ void main() async {
   //     File("D:\\Code\\Vrzwk\\flutter_chinese_keyboard\\test\\code.txt");
   // await nfile.create();
   // await nfile.writeAsString(code);
-  var ss = WordsSearch.getPinYinSplit('n');
+  var ss = WordsSearch.getPinYinSplit('zhangh');
   // SougouPinyinScel sogo = SougouPinyinScel();
   // var res = await sogo
   //     .import("D:\\Code\\Vrzwk\\flutter_chinese_keyboard\\test\\最新常用聊天短语.scel");
