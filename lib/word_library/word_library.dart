@@ -5,7 +5,7 @@ import 'package:flutter_chinese_keyboard/word_library/code.dart';
 class WordLibrary {
   bool isEnglish = false;
   String _pinYinString = "";
-  int rank = 0;
+  num rank = 0;
   String word = "";
   Code codes = Code();
 

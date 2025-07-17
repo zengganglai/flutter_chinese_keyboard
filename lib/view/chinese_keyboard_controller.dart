@@ -3,6 +3,8 @@ import 'dart:isolate';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chinese_keyboard/google/google_pinyin.dart';
+import 'package:flutter_chinese_keyboard/helper/pinyin_ime.dart';
 import 'package:flutter_chinese_keyboard/helper/word_pinyin.dart';
 import 'package:flutter_chinese_keyboard/pinyin_split/words_search.dart';
 import 'package:flutter_chinese_keyboard/sogo/sougou_pinyin_txt.dart';
@@ -26,11 +28,11 @@ class ChineseKeyboardController {
 
   static final Map<String, List<String>> _selectedCache = {};
 
+  static PinYinIME pinyinIME = GooglePinyin();
+
   ChineseKeyboardController() {
     ChineseKeyboardController.init();
   }
-
-  static WordLibraryList? _wordLibraryList;
 
   static Function(String, List<String>)? _onResultCallback;
   static SendPort? _searchSendPort;
@@ -40,12 +42,13 @@ class ChineseKeyboardController {
     if (isinit) {
       return;
     }
+    debugPrint("ChineseKeyboard init: ${DateTime.now()}");
     isinit = true;
     final receivePort = ReceivePort();
     final sendPort = receivePort.sendPort;
-    String wordsText = await rootBundle
-        .loadString("packages/flutter_chinese_keyboard/lib/assets/words");
-    Isolate.spawn(_init, [sendPort, wordsText]);
+    String googleJson = await rootBundle.loadString(
+        "packages/flutter_chinese_keyboard/lib/assets/google_pinyin_dict_utf8_55320.json");
+    Isolate.spawn(_init, [sendPort, googleJson]);
     receivePort.listen((message) {
       if (message is List) {
         _onResultCallback?.call(message[0], message[1]);
@@ -56,17 +59,14 @@ class ChineseKeyboardController {
   }
 
   static void _init(List data) async {
+    debugPrint("ChineseKeyboard init call");
     SendPort sendPort = data[0];
-    String wordsText = data[1];
-    _wordLibraryList ??=
-        await SougouPinyinTxt().importLines(wordsText.split('\n'));
+    String googleJson = data[1];
+    pinyinIME.init(googleJson);
     var port = ReceivePort();
     sendPort.send(port.sendPort);
     await for (var sendData in port) {
-      sendPort.send([
-        sendData[0],
-        _search(sendData[1], wordPinYinList, _wordLibraryList)
-      ]);
+      sendPort.send([sendData[0], await _search(sendData[0])]);
     }
   }
 
@@ -99,15 +99,8 @@ class ChineseKeyboardController {
 
   Future input(String text) async {
     if (text.isNotEmpty) {
-      var allPinyin = WordsSearch.getPinYinSplit(text);
-      allPinyin.sort((a, b) {
-        var lengthCompare = b.join().length.compareTo(a.join().length);
-        if (lengthCompare != 0) {
-          return lengthCompare;
-        }
-        return a.length.compareTo(b.length);
-      });
-      pinyinShow.value = allPinyin.isEmpty ? "" : allPinyin.first.join("'");
+      debugPrint("ChineseKeyboard input start: ${text}--${DateTime.now()}");
+      pinyinShow.value = text;
       List<String> result;
       if (_cache.containsKey(text)) {
         result = _cache[text] ?? [];
@@ -121,7 +114,7 @@ class ChineseKeyboardController {
       } else {
         if (_searchSendPort != null) {
           _onResultCallback = _onResult;
-          _searchSendPort?.send([text, allPinyin]);
+          _searchSendPort?.send([text]);
         } else {
           candidateWords.value = [];
         }
@@ -131,6 +124,7 @@ class ChineseKeyboardController {
       candidateWords.value = [];
     }
     showCandidateWords.value = text.isNotEmpty;
+    debugPrint("ChineseKeyboard input end: ${text}--${DateTime.now()}");
   }
 
   _onResult(String py, List<String> result) {
@@ -144,26 +138,8 @@ class ChineseKeyboardController {
     candidateWords.value = result;
   }
 
-  static List<String> _search(List<List<String>> allPinyin,
-      WordLibraryList wordPinYinList, WordLibraryList? wordLibraryList) {
-    List<String> words = [];
-    for (var pinYin in allPinyin) {
-      if (pinYin.length == 1) {
-        for (var word in wordPinYinList.search(pinYin).words) {
-          if (!words.contains(word)) {
-            words.add(word);
-          }
-        }
-      }
-      if (_wordLibraryList != null) {
-        for (var word in wordLibraryList!.search(pinYin).words) {
-          if (!words.contains(word)) {
-            words.add(word);
-          }
-        }
-      }
-    }
-    words.sort((a, b) => a.length.compareTo(b.length));
-    return words;
+  static Future<List<String>> _search(String pinyin) async {
+    debugPrint("ChineseKeyboard _search call: ${pinyin}");
+    return await pinyinIME.search(pinyin);
   }
 }

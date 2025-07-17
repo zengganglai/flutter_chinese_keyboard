@@ -34,6 +34,13 @@ class WordsSearchResult {
     return _hash;
   }
 
+  bool contains(WordsSearchResult s) {
+    if (childs.isEmpty) {
+      return this == s;
+    }
+    return childs.any((element) => element == s || element.contains(s));
+  }
+
   @override
   String toString() {
     return '$start|$keyword';

@@ -113,6 +113,79 @@ class WordsSearch {
     return null;
   }
 
+  // List<WordsSearchResult> findAll(String text) {
+  //   TrieNode? ptr;
+  //   final list = <WordsSearchResult>[];
+
+  //   for (int i = 0; i < text.length; i++) {
+  //     TrieNode? tn;
+  //     if (ptr == null) {
+  //       tn = _first[text.codeUnitAt(i)];
+  //     } else {
+  //       tn = ptr.tryGetValue(text[i]);
+  //       // if (tn != null) {
+  //       //   var ss = _first[text.codeUnitAt(i)];
+  //       //   if (ss != null) {
+  //       //     for (var key in ss.values.keys) {
+  //       //       if (!tn.values.containsKey(key)) {
+  //       //         tn.values[key] = ss.values[key]!;
+  //       //       }
+  //       //     }
+  //       //     for (var resultItem in ss.results) {
+  //       //       if (!tn.results
+  //       //           .any((element) => element.item1 == resultItem.item1)) {
+  //       //         tn.results.add(resultItem);
+  //       //       }
+  //       //     }
+  //       //   }
+  //       // }
+  //       tn ??= _first[text.codeUnitAt(i)];
+  //     }
+  //     if (tn != null && tn.end) {
+  //       for (var item in tn.results) {
+  //         final searchResult = WordsSearchResult(item.item1.toLowerCase(),
+  //             i + 1 - item.item1.length, i, item.item2);
+
+  //         if (!list.any((item) =>
+  //             item.index == searchResult.index &&
+  //             item.start == searchResult.start &&
+  //             item.end == searchResult.end)) {
+  //           list.add(searchResult);
+  //         }
+  //       }
+  //     }
+  //     ptr = tn;
+  //   }
+
+  //   var needRemoveChilds = [];
+  //   for (var s in list) {
+  //     final childs = list.where((c) => c.start == s.end + 1).toList()
+  //       ..sort((a, b) => a.start.compareTo(b.start));
+  //     if (childs.isNotEmpty) {
+  //       final firstStart = childs[0].start;
+  //       s.childs = childs.where((c) => c.start == firstStart).toList();
+  //       for (var c in s.childs) {
+  //         c.parents.add(s);
+  //       }
+  //     } else {
+  //       if (s.end != text.length - 1) {
+  //         needRemoveChilds.add(s);
+  //       }
+  //     }
+  //   }
+
+  //   for (var s in list) {
+  //     s.childs.removeWhere(
+  //         (c) => needRemoveChilds.any((needRemove) => c.contains(needRemove)));
+  //     if (s.childs.isEmpty && s.end != text.length - 1) {
+  //       needRemoveChilds.add(s);
+  //     }
+  //   }
+  //   list.removeWhere(
+  //       (s) => s.parents.isNotEmpty || needRemoveChilds.contains(s));
+  //   return list;
+  // }
+
   List<WordsSearchResult> findAll(String text) {
     TrieNode? ptr;
     final list = <WordsSearchResult>[];
