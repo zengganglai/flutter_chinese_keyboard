@@ -1,6 +1,6 @@
 name: flutter_chinese_keyboard
-description: A flutter package for Chinese input virtual keyboard.
-version: 0.0.1
+description: 纯Dart中文键盘实现，支持中文输入法，自带谷歌拼音词库
+version: 1.0.1
 
 homepage: https://github.com/zhangredli
 repository: https://github.com/zhangredli/flutter_chinese_keyboard
