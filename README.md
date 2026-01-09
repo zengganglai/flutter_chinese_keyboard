@@ -1,18 +1,8 @@
 # flutter_chinese_keyboard
 
-A new Flutter plugin project.
+纯Dart中文键盘实现，支持中文输入法，自带谷歌拼音词库
+<img width="1264" height="679" alt="60b92ae3-d4f6-4e0d-bd5e-183b76ac37bd" src="https://github.com/user-attachments/assets/a9582457-9cd5-4676-a12f-0be0989125bb" />
 
-## Getting Started
+# 示例效果演示
+![动画](https://github.com/user-attachments/assets/53fb1871-d7f8-4ea7-abb3-8778faacd9be)
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-The plugin project was generated without specifying the `--platforms` flag, no platforms are currently supported.
-To add platforms, run `flutter create -t plugin --platforms <platforms> .` in this directory.
-You can also find a detailed instruction on how to add platforms in the `pubspec.yaml` at https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms.
